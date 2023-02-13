@@ -9,7 +9,7 @@ namespace GamesCRUD.Controllers
     public class GameController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<List<Game>> ExibirTodosOsGames()
+        public ActionResult<List<GameModel>> ExibirTodosOsGames()
         {
             return Ok();
         }

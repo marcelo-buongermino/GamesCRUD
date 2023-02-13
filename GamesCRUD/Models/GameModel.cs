@@ -1,6 +1,6 @@
 ﻿namespace GamesCRUD.Models
 {
-    public class Game
+    public class GameModel
     {
         public int Id { get; set; }
         public string? Nome { get; set; }
