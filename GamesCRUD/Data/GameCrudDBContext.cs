@@ -1,4 +1,5 @@
-﻿using GamesCRUD.Models;
+﻿using GamesCRUD.Mappings;
+using GamesCRUD.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamesCRUD.Data
@@ -16,6 +17,14 @@ namespace GamesCRUD.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //aplica as configuracoes definidas no na classe GameMap
+            modelBuilder.ApplyConfiguration(new GameMap());
+
+            //modelBuilder.Entity<GameModel>()
+            //    .Property(p => p.Nome)
+            //    .HasColumnType("varchar(100)")
+            //    ;
         }
     }
 }

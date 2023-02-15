@@ -1,3 +1,6 @@
+using GamesCRUD.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace GamesCRUD
 {
     public class Program
@@ -12,6 +15,11 @@ namespace GamesCRUD
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Conexao do EF, Db Context no pgsql 
+            builder.Services.AddEntityFrameworkNpgsql()
+                .AddDbContext<GameCrudDBContext>(opt => 
+                opt.UseNpgsql(builder.Configuration.GetConnectionString("Game_Crud_DB")));
 
             var app = builder.Build();
 
