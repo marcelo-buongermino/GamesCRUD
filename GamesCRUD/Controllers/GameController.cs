@@ -23,11 +23,10 @@ namespace GamesCRUD.Controllers
         }
 
         /// <summary>
-        /// Adiciona um game ao banco de dados
-        /// </summary>
-        /// <param name="gameDTO">Objeto com os campos necessários para cadastro de um game</param>
+        /// Lista os games cadastrados no banco de dados
+        /// </summary>       
         /// <returns>IActionResult</returns>
-        /// <response code="201">Caso inserção seja feita com sucesso</response>
+        /// <response code="200">Caso a listagem seja executada com sucesso</response>
         [HttpGet]
         public IEnumerable<GameDTO> ListAllGames([FromQuery] int skip = 0,
         [FromQuery] int take = 50)
@@ -35,6 +34,12 @@ namespace GamesCRUD.Controllers
             return _mapper.Map<List<GameDTO>>(_context.Games.Skip(skip).Take(take));
         }
 
+        /// <summary>
+        /// Exibe um game cadastrado pelo ID
+        /// </summary>
+        /// <param name="id">Id game que será buscado no banco de dados</param>
+        /// <returns>IActionResult</returns>
+        /// <response code="200">Caso inserção seja feita com sucesso</response>
         [HttpGet("{id}")]
         public IActionResult GetGameById(int id)
         {
@@ -44,6 +49,12 @@ namespace GamesCRUD.Controllers
             return Ok(gameDTO);
         }
 
+        /// <summary>
+        /// Adiciona um game ao banco de dados
+        /// </summary>
+        /// <param name="gameDTO">Objeto com os campos necessários para cadastro de um game</param>
+        /// <returns>IActionResult</returns>
+        /// <response code="201">Caso inserção seja feita com sucesso</response>
         [HttpPost]
         public IActionResult AddGame([FromBody] GameDTO gameDTO)
         {
@@ -56,6 +67,13 @@ namespace GamesCRUD.Controllers
                 );
         }
 
+
+        /// <summary>
+        /// Atualiza um objeto game no banco de dados
+        /// </summary>
+        /// <param name="gameDTO">Objeto com os campos necessários para atualizacao de seus campos</param>
+        /// <returns>IActionResult</returns>
+        /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
         [HttpPut("{id}")]
         public IActionResult UpdateGame(int id, [FromBody] GameDTO gameDTO)
         {
@@ -66,7 +84,12 @@ namespace GamesCRUD.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Atualiza parcialmente um objeto game no banco de dados
+        /// </summary>
+        /// <param name="gameDTO">Qualquer propriedade com os campos necessários para atualizacao</param>
+        /// <returns>IActionResult</returns>
+        /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
         [HttpPatch("{id}")]
         public IActionResult PartialUpdateGame(int id, JsonPatchDocument<GameDTO> patch)
         {
@@ -86,6 +109,12 @@ namespace GamesCRUD.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Remove um game do banco de dados
+        /// </summary>
+        ///  <param name="id">Id game que será buscado no banco de dados para a exclusao</param>
+        /// <returns>IActionResult</returns>
+        /// <response code="204">Caso exclusao seja feita com sucesso</response>
         [HttpDelete]
         public IActionResult DeleteGame(int id)
         {
