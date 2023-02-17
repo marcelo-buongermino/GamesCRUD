@@ -21,10 +21,6 @@ namespace GamesCRUD.Data
             //aplica as configuracoes definidas no na classe GameMap
             modelBuilder.ApplyConfiguration(new GameMap());
 
-            //modelBuilder.Entity<GameModel>()
-            //    .Property(p => p.Nome)
-            //    .HasColumnType("varchar(100)")
-            //    ;
         }
     }
 }

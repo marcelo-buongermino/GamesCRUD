@@ -13,6 +13,7 @@ namespace GamesCRUD.Repositories
         {
             _dbContext = gameCrudDBContext;
         }
+
         public async Task<GameModel> FindGameById(int id)
         {
             return await _dbContext.Games.FirstOrDefaultAsync(game => game.Id == id);
