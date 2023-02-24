@@ -1,4 +1,5 @@
-﻿using GamesCRUD.Models;
+﻿using GamesCRUD.Data.DTO;
+using GamesCRUD.Models;
 
 namespace GamesCRUD.Repositories.Interfaces
 {
@@ -7,7 +8,8 @@ namespace GamesCRUD.Repositories.Interfaces
         Task<List<GameModel>> ListAllGames();
         Task<GameModel> FindGameById(int id);
         Task<GameModel> AddGame(GameModel game);
-        Task<GameModel> Update(GameModel game, int id);
+        Task<GameModel> UpdateGame(GameModel game, int id);
+        //Task<GameModel> PartiallyUpdateGame(GameModel game, int id);
         Task<bool> DeleteGame(int id);
 
     }

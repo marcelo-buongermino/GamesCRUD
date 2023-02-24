@@ -1,128 +1,156 @@
-﻿using GamesCRUD.Data;
-using GamesCRUD.Models;
-
+﻿using GamesCRUD.Models;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using GamesCRUD.Data.DTO;
-using Microsoft.AspNetCore.JsonPatch;
+using GamesCRUD.Repositories.Interfaces;
 
-namespace GamesCRUD.Controllers
+namespace GamesCRUD.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class GameController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GameController : ControllerBase
+    // define injecao de dependencia(repositorio) e mapper
+    private readonly IGameRepository _gameRepository;
+    private readonly IMapper _mapper;
+
+    public GameController(IGameRepository gameRepository, IMapper mapper)
     {
-        // define injecao de dependencia e mapper
-        private GameCrudDBContext _context;
-        private IMapper _mapper;
+        _gameRepository = gameRepository;
+        _mapper = mapper;
+    }
 
-        public GameController(GameCrudDBContext context, IMapper mapper)
+    /// <summary>
+    /// Lista os games cadastrados no banco de dados
+    /// </summary>       
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso a listagem seja executada com sucesso</response>
+    [HttpGet]
+    public async Task<ActionResult<List<GameModel>>> ListAllGames()
+    {
+        try
         {
-            _context = context;
-            _mapper = mapper;
+            List <GameModel> games = await _gameRepository.ListAllGames();
+            return Ok(games);
+        }
+        catch (Exception ex)
+        {            
+            throw new Exception(ex.Message);
+
         }
 
-        /// <summary>
-        /// Lista os games cadastrados no banco de dados
-        /// </summary>       
-        /// <returns>IActionResult</returns>
-        /// <response code="200">Caso a listagem seja executada com sucesso</response>
-        [HttpGet]
-        public IEnumerable<GameDTO> ListAllGames([FromQuery] int skip = 0,
-        [FromQuery] int take = 50)
-        {
-            return _mapper.Map<List<GameDTO>>(_context.Games.Skip(skip).Take(take));
-        }
+    }
 
-        /// <summary>
-        /// Exibe um game cadastrado pelo ID
-        /// </summary>
-        /// <param name="id">Id game que será buscado no banco de dados</param>
-        /// <returns>IActionResult</returns>
-        /// <response code="200">Caso inserção seja feita com sucesso</response>
-        [HttpGet("{id}")]
-        public IActionResult GetGameById(int id)
+    /// <summary>
+    /// Exibe um game cadastrado pelo ID
+    /// </summary>
+    /// <param name="id">Id game que será buscado no banco de dados</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso a consulta seja feita com sucesso</response>
+    [HttpGet("{id}")]
+    public async Task<ActionResult<GameModel>> GetGameById(int id)
+    {
+        try
         {
-            var game = _context.Games.FirstOrDefault(game => game.Id == id);
-            if (game == null) { return NotFound(); }
-            var gameDTO = _mapper.Map<GameDTO>(game);
-            return Ok(gameDTO);
+            var game = await _gameRepository.FindGameById(id);
+            return Ok(game);
         }
-
-        /// <summary>
-        /// Adiciona um game ao banco de dados
-        /// </summary>
-        /// <param name="gameDTO">Objeto com os campos necessários para cadastro de um game</param>
-        /// <returns>IActionResult</returns>
-        /// <response code="201">Caso inserção seja feita com sucesso</response>
-        [HttpPost]
-        public IActionResult AddGame([FromBody] GameDTO gameDTO)
+        catch (Exception ex)
         {
-            GameModel game = _mapper.Map<GameModel>(gameDTO);
-            _context.Games.Add(game);
-            _context.SaveChanges();
+
+            return NotFound(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Adiciona um game ao banco de dados
+    /// </summary>
+    /// <param name="gameDTO">Objeto com os campos necessários para cadastro de um game</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    [HttpPost]
+    public async Task<ActionResult<GameModel>> AddGame([FromBody] GameModel gameModel)
+    {
+        try
+        {
+            GameModel game = await _gameRepository.AddGame(gameModel);
             return CreatedAtAction(nameof(GetGameById),
-                new { id = game.Id },
-                game
-                );
+                                    new { id = game.Id },
+                                    game);
         }
-
-
-        /// <summary>
-        /// Atualiza um objeto game no banco de dados
-        /// </summary>
-        /// <param name="gameDTO">Objeto com os campos necessários para atualizacao de seus campos</param>
-        /// <returns>IActionResult</returns>
-        /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
-        [HttpPut("{id}")]
-        public IActionResult UpdateGame(int id, [FromBody] GameDTO gameDTO)
+        catch (Exception ex)
         {
-            var game = _context.Games.FirstOrDefault(game => game.Id == id);
-            if (game == null) return NotFound();
-            _mapper.Map(gameDTO, game);
-            _context.SaveChanges();
+
+            return BadRequest(ex.Message);
+        }
+        
+    }
+
+
+    /// <summary>
+    /// Atualiza um objeto game no banco de dados
+    /// </summary>
+    /// <param name="id">Objeto com os campos necessários para atualizacao de seus campos</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
+    [HttpPut("{id}")]
+    public async Task<ActionResult<GameModel>> UpdateGame([FromBody] GameModel game, int id)
+    {
+        try
+        {
+            game.Id= id;
+            await _gameRepository.UpdateGame(game, id);
             return NoContent();
         }
-
-        /// <summary>
-        /// Atualiza parcialmente um objeto game no banco de dados
-        /// </summary>
-        /// <param name="gameDTO">Qualquer propriedade com os campos necessários para atualizacao</param>
-        /// <returns>IActionResult</returns>
-        /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
-        [HttpPatch("{id}")]
-        public IActionResult PartialUpdateGame(int id, JsonPatchDocument<GameDTO> patch)
+        catch (Exception ex)
         {
-            var game = _context.Games.FirstOrDefault(game => game.Id == id);
-            if (game == null) return NotFound();
 
-            var filmeParaAtualizar = _mapper.Map<GameDTO>(game);
-            patch.ApplyTo(filmeParaAtualizar, ModelState);
+            return NotFound(ex.Message);
+        }
+    }
 
-            if (!TryValidateModel(filmeParaAtualizar))
-            {
-                return ValidationProblem(ModelState);
-            }
+    /// <summary>
+    /// Atualiza parcialmente um objeto game no banco de dados
+    /// </summary>
+    /// <param name="gameDTO">Qualquer propriedade com os campos necessários para atualizacao</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
+    //[HttpPatch("{id}")]
+    //public IActionResult PartiallyUpdateGame(int id, JsonPatchDocument<GameDTO> patch)
+    //{
+    //    var game = _gameRepository.
+    //    if (game == null) return NotFound();
 
-            _mapper.Map(filmeParaAtualizar, game);
-            _context.SaveChanges();
+    //    var filmeParaAtualizar = _mapper.Map<GameDTO>(game);
+    //    patch.ApplyTo(filmeParaAtualizar, ModelState);
+
+    //    if (!TryValidateModel(filmeParaAtualizar))
+    //    {
+    //        return ValidationProblem(ModelState);
+    //    }
+
+    //    _mapper.Map(filmeParaAtualizar, game);
+    //    _context.SaveChanges();
+    //    return NoContent();
+    //}
+
+    /// <summary>
+    /// Remove um game do banco de dados
+    /// </summary>
+    ///  <param name="id">Id game que será buscado no banco de dados para a exclusao</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="204">Caso exclusao seja feita com sucesso</response>
+    [HttpDelete]
+    public async Task<ActionResult<GameModel>> DeleteGame(int id)
+    {        
+        try
+        {
+            await _gameRepository.DeleteGame(id);
             return NoContent();
         }
-
-        /// <summary>
-        /// Remove um game do banco de dados
-        /// </summary>
-        ///  <param name="id">Id game que será buscado no banco de dados para a exclusao</param>
-        /// <returns>IActionResult</returns>
-        /// <response code="204">Caso exclusao seja feita com sucesso</response>
-        [HttpDelete]
-        public IActionResult DeleteGame(int id)
+        catch (Exception)
         {
-            var game = _context.Games.FirstOrDefault(game => game.Id == id);
-            if (game == null) { return NotFound(); }
-            _context.Games.Remove(game);
-            _context.SaveChanges();
-            return NoContent();
+
+            return NotFound(); 
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GamesCRUD.Data;
+using GamesCRUD.Data.DTO;
 using GamesCRUD.Models;
 using GamesCRUD.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,12 @@ namespace GamesCRUD.Repositories
 
         public async Task<GameModel> FindGameById(int id)
         {
-            return await _dbContext.Games.FirstOrDefaultAsync(game => game.Id == id);
+            var game = await _dbContext.Games.FirstOrDefaultAsync(game => game.Id == id);
+            if (game == null) 
+            {
+                throw new Exception("Game nao encontrado!");
+            }
+            return game;
         }
 
         public async Task<List<GameModel>> ListAllGames()
@@ -32,7 +38,7 @@ namespace GamesCRUD.Repositories
             return game;
         }
 
-        public async Task<GameModel> Update(GameModel game, int id)
+        public async Task<GameModel> UpdateGame(GameModel game, int id)
         {
             var gameFound = await FindGameById(id);
 
@@ -41,16 +47,35 @@ namespace GamesCRUD.Repositories
                 throw new Exception("Game não encontrado");
             }
 
-            gameFound.Id = gameFound.Id;
-            gameFound.Nome = gameFound.Nome;
-            gameFound.Categoria = gameFound.Categoria;
-            gameFound.DataLancamento = gameFound.DataLancamento;
+            gameFound.Id = game.Id;
+            gameFound.Nome = game.Nome;
+            gameFound.Categoria = game.Categoria;
+            gameFound.DataLancamento = game.DataLancamento;
 
             _dbContext.Games.Update(gameFound);
             await _dbContext.SaveChangesAsync();
             return gameFound;
 
         }
+
+        //public async Task<GameModel> PartiallyUpdateGame(GameModel game, int id)
+        //{
+        //    var gameFound = await FindGameById(id);
+
+        //    if (gameFound == null)
+        //    {
+        //        throw new Exception("Game não encontrado");
+        //    }
+
+        //    gameFound.Id = gameFound.Id;
+        //    gameFound.Nome = gameFound.Nome;
+        //    gameFound.Categoria = gameFound.Categoria;
+        //    gameFound.DataLancamento = gameFound.DataLancamento;
+
+        //    _dbContext.Games.Update(gameFound);
+        //    await _dbContext.SaveChangesAsync();
+        //    return gameFound;
+        //}
 
         public async Task<bool> DeleteGame(int id)
         {
@@ -66,7 +91,6 @@ namespace GamesCRUD.Repositories
 
             return true;
         }
-
 
     }
 }

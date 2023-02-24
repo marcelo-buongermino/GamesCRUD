@@ -16,10 +16,10 @@ namespace GamesCRUD.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //aplica as configuracoes definidas na classe GameMap
+            modelBuilder.ApplyConfiguration(new GameMap());
             base.OnModelCreating(modelBuilder);
 
-            //aplica as configuracoes definidas no na classe GameMap
-            modelBuilder.ApplyConfiguration(new GameMap());
 
         }
     }
