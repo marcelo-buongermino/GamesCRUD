@@ -8,7 +8,7 @@ public class GameMap : IEntityTypeConfiguration<GameModel>
 {
     public void Configure(EntityTypeBuilder<GameModel> builder)
     {
-        builder.ToTable("Game");
+        builder.ToTable("Games");
 
         builder.Property(p => p.Nome)
             .HasColumnType("varchar(100)")
