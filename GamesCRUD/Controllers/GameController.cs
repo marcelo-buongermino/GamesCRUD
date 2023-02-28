@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using GamesCRUD.Repositories.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GamesCRUD.Controllers;
 
@@ -19,12 +20,13 @@ public class GameController : ControllerBase
         _mapper = mapper;
     }
 
-    /// <summary>
-    /// Lista os games cadastrados no banco de dados
-    /// </summary>       
-    /// <returns>IActionResult</returns>
-    /// <response code="200">Caso a listagem seja executada com sucesso</response>
     [HttpGet]
+    [SwaggerOperation(
+        Summary = "Lista todos os jogos da base de dados",
+        Description = "Mostra uma listagem de todos os jogos cadastrados na base de dados"
+    )]
+    [SwaggerResponse(200, "Sucesso na operação", typeof(List<GameModel>))]
+    [SwaggerResponse(400, "Ocorreu um erro ao exibir a listagem!")]
     public async Task<ActionResult<List<GameModel>>> ListAllGames()
     {
         try
@@ -40,13 +42,15 @@ public class GameController : ControllerBase
 
     }
 
-    /// <summary>
-    /// Exibe um game cadastrado pelo ID
-    /// </summary>
-    /// <param name="id">Id game que será buscado no banco de dados</param>
-    /// <returns>IActionResult</returns>
-    /// <response code="200">Caso a consulta seja feita com sucesso</response>
+ 
     [HttpGet("{id}")]
+    [SwaggerOperation(
+        Summary = "Lista um jogo especifico",
+        Description = "Lista um jogo especifico, baseado no id enviado por parametro"
+    )]
+    [SwaggerResponse(200, "Sucesso na operação", typeof(List<GameModel>))]
+    [SwaggerResponse(404, "O game não foi encontrado!")]
+    [SwaggerResponse(400, "Ocorreu um erro ao buscar pelo game especificado!")]
     public async Task<ActionResult<GameModel>> GetGameById(int id)
     {
         try
@@ -61,13 +65,14 @@ public class GameController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Adiciona um game ao banco de dados
-    /// </summary>
-    /// <param name="gameDTO">Objeto com os campos necessários para cadastro de um game</param>
-    /// <returns>IActionResult</returns>
-    /// <response code="201">Caso inserção seja feita com sucesso</response>
+    
     [HttpPost]
+    [SwaggerOperation(
+        Summary = "Cria um novo jogo",
+        Description = "Cria um jogo recebendo Nome, Categoria e Data de Lançamento"
+    )]
+    [SwaggerResponse(201, "O Game foi criado com sucesso!", typeof(GameModel))]
+    [SwaggerResponse(400, "Existem dados inválidos!")]
     public async Task<ActionResult<GameModel>> AddGame([FromBody] GameModel gameModel)
     {
         try
@@ -86,13 +91,14 @@ public class GameController : ControllerBase
     }
 
 
-    /// <summary>
-    /// Atualiza um objeto game no banco de dados
-    /// </summary>
-    /// <param name="id">Objeto com os campos necessários para atualizacao de seus campos</param>
-    /// <returns>IActionResult</returns>
-    /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
     [HttpPut("{id}")]
+    [SwaggerOperation(
+        Summary = "Atualiza um jogo existente",
+        Description = "Atualiza um jogo cadastrada na base de dados, recebendo Nome, Categoria e Data de Lançamento"
+    )]
+    [SwaggerResponse(204, "O Game foi atualizado com sucesso!")]
+    [SwaggerResponse(400, "Existem dados inválidos!")]
+    [SwaggerResponse(404, "Erro na requisição, game não encontrnado!")]
     public async Task<ActionResult<GameModel>> UpdateGame([FromBody] GameModel game, int id)
     {
         try
@@ -108,12 +114,6 @@ public class GameController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Atualiza parcialmente um objeto game no banco de dados
-    /// </summary>
-    /// <param name="gameDTO">Qualquer propriedade com os campos necessários para atualizacao</param>
-    /// <returns>IActionResult</returns>
-    /// <response code="200">Caso a atualizacao seja feita com sucesso</response>
     //[HttpPatch("{id}")]
     //public IActionResult PartiallyUpdateGame(int id, JsonPatchDocument<GameDTO> patch)
     //{
@@ -133,13 +133,15 @@ public class GameController : ControllerBase
     //    return NoContent();
     //}
 
-    /// <summary>
-    /// Remove um game do banco de dados
-    /// </summary>
-    ///  <param name="id">Id game que será buscado no banco de dados para a exclusao</param>
-    /// <returns>IActionResult</returns>
-    /// <response code="204">Caso exclusao seja feita com sucesso</response>
+ 
     [HttpDelete]
+    [SwaggerOperation(
+        Summary = "Exclui um jogo da base de dados",
+        Description = "Exclui um jogo cadastrada na base de dados, recebendo um ID como parametro"
+    )]
+    [SwaggerResponse(204, "Requisição bem sucedida")]
+    [SwaggerResponse(400, "Falha na requisição")]
+    [SwaggerResponse(404, "Erro na requisição, game não encontrado!")]
     public async Task<ActionResult<GameModel>> DeleteGame(int id)
     {        
         try

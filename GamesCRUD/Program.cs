@@ -38,11 +38,19 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo 
             { 
                 Title = "GameAPI",
-                Version = "v1" 
+                Version = "v1" ,
+                Description = "Uma API Web REST, em formato CRUD, que gerencia Games",
+                Contact = new OpenApiContact
+                {
+                    Name= "Marcelo Buongermino",
+                    Email = "marcelo.buongermino@fcamara.com.br"
+                }
             });
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
+            //Habilita anotacoes para swashbuckle
+            c.EnableAnnotations();
         });
 
 
@@ -52,7 +60,10 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI( c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "My API v1");
+            });
         }
 
         app.UseHttpsRedirection();
