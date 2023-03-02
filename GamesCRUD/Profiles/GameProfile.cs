@@ -2,13 +2,12 @@
 using GamesCRUD.Data.DTO;
 using GamesCRUD.Models;
 
-namespace GamesCRUD.Profiles
+namespace GamesCRUD.Profiles;
+
+public class GameProfile : Profile
 {
-    public class GameProfile : Profile
+    public GameProfile()
     {
-        public GameProfile()
-        {
-            CreateMap<GameDTO, GameModel>();
-        }
+        CreateMap<GameDTO, Game>();
     }
 }

@@ -2,6 +2,7 @@ using GamesCRUD.Data;
 using GamesCRUD.Repositories;
 using GamesCRUD.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -51,6 +52,12 @@ public class Program
             c.IncludeXmlComments(xmlPath);
             //Habilita anotacoes para swashbuckle
             c.EnableAnnotations();
+            //c.MapType<DateOnly>(() => new OpenApiSchema
+            //{
+            //    Type = "string",
+            //    Format = "date",
+            //    Example = new OpenApiString("2022-01-01")
+            //});
         });
 
 

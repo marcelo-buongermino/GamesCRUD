@@ -25,13 +25,13 @@ public class GameController : ControllerBase
         Summary = "Lista todos os jogos da base de dados",
         Description = "Mostra uma listagem de todos os jogos cadastrados na base de dados"
     )]
-    [SwaggerResponse(200, "Sucesso na operação", typeof(List<GameModel>))]
+    [SwaggerResponse(200, "Sucesso na operação", typeof(List<Game>))]
     [SwaggerResponse(400, "Ocorreu um erro ao exibir a listagem!")]
-    public async Task<ActionResult<List<GameModel>>> ListAllGames()
+    public async Task<ActionResult<List<Game>>> ListAllGames()
     {
         try
         {
-            List <GameModel> games = await _gameRepository.ListAllGames();
+            List <Game> games = await _gameRepository.ListAllGames();
             return Ok(games);
         }
         catch (Exception ex)
@@ -48,10 +48,10 @@ public class GameController : ControllerBase
         Summary = "Lista um jogo especifico",
         Description = "Lista um jogo especifico, baseado no id enviado por parametro"
     )]
-    [SwaggerResponse(200, "Sucesso na operação", typeof(List<GameModel>))]
+    [SwaggerResponse(200, "Sucesso na operação", typeof(List<Game>))]
     [SwaggerResponse(404, "O game não foi encontrado!")]
     [SwaggerResponse(400, "Ocorreu um erro ao buscar pelo game especificado!")]
-    public async Task<ActionResult<GameModel>> GetGameById(int id)
+    public async Task<ActionResult<Game>> GetGameById(int id)
     {
         try
         {
@@ -71,16 +71,16 @@ public class GameController : ControllerBase
         Summary = "Cria um novo jogo",
         Description = "Cria um jogo recebendo Nome, Categoria e Data de Lançamento"
     )]
-    [SwaggerResponse(201, "O Game foi criado com sucesso!", typeof(GameModel))]
+    [SwaggerResponse(201, "O Game foi criado com sucesso!", typeof(Game))]
     [SwaggerResponse(400, "Existem dados inválidos!")]
-    public async Task<ActionResult<GameModel>> AddGame([FromBody] GameModel gameModel)
+    public async Task<ActionResult<Game>> AddGame([FromBody] Game game)
     {
         try
         {
-            GameModel game = await _gameRepository.AddGame(gameModel);
+            Game cretedObject = await _gameRepository.AddGame(game);
             return CreatedAtAction(nameof(GetGameById),
-                                    new { id = game.Id },
-                                    game);
+                                    new { id = cretedObject.Id },
+                                    cretedObject);
         }
         catch (Exception ex)
         {
@@ -99,7 +99,7 @@ public class GameController : ControllerBase
     [SwaggerResponse(204, "O Game foi atualizado com sucesso!")]
     [SwaggerResponse(400, "Existem dados inválidos!")]
     [SwaggerResponse(404, "Erro na requisição, game não encontrnado!")]
-    public async Task<ActionResult<GameModel>> UpdateGame([FromBody] GameModel game, int id)
+    public async Task<ActionResult<Game>> UpdateGame([FromBody] Game game, int id)
     {
         try
         {
@@ -142,7 +142,7 @@ public class GameController : ControllerBase
     [SwaggerResponse(204, "Requisição bem sucedida")]
     [SwaggerResponse(400, "Falha na requisição")]
     [SwaggerResponse(404, "Erro na requisição, game não encontrado!")]
-    public async Task<ActionResult<GameModel>> DeleteGame(int id)
+    public async Task<ActionResult<Game>> DeleteGame(int id)
     {        
         try
         {
