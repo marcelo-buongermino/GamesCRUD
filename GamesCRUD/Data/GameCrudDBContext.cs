@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GamesCRUD.Mappings;
 using GamesCRUD.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -30,6 +31,7 @@ public partial class GameCrudDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new GameMap());
         OnModelCreatingPartial(modelBuilder);
     }
 

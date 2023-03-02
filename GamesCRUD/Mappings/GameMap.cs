@@ -19,8 +19,7 @@ public class GameMap : IEntityTypeConfiguration<Game>
             entity.Property(e => e.CreatedAt)
                 .ValueGeneratedOnAdd()
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("created_at")
-                .ValueGeneratedOnAdd().HasDefaultValueSql("now()");
+                .HasColumnName("created_at");
 
             entity.Property(e => e.Description)
                 .HasMaxLength(300)
@@ -42,8 +41,7 @@ public class GameMap : IEntityTypeConfiguration<Game>
 
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("updated_at")
-                .ValueGeneratedOnUpdate();
+                .HasColumnName("updated_at");
         
     }
 }

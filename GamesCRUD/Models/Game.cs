@@ -28,7 +28,7 @@ public partial class Game
     public DateTime ReleaseDate { get; set; }
 
     [SwaggerSchema(Description = "Data de criação do registro, gerado automaticamente", Format = "timestamp")]
-    public DateTime? CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
     [SwaggerSchema(Description = "Data de atualização do registro, gerado automaticamente", Format = "timestamp")]
     public DateTime? UpdatedAt { get; set; }
