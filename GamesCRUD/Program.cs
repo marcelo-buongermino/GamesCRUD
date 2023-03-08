@@ -1,8 +1,9 @@
+using AutoMapper;
 using GamesCRUD.Data;
+using GamesCRUD.Data.DTO.Mappings;
 using GamesCRUD.Repositories;
 using GamesCRUD.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -29,9 +30,13 @@ public class Program
 
         builder.Services.AddControllers().AddNewtonsoftJson();
 
-        //adicao do AutoMapper
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+        //comfiguração do serviço do AutoMapper
+        var mappingConfig = new MapperConfiguration(mc =>
+        {
+            mc.AddProfile(new MappingProfile());
+        });
+        IMapper mapper = mappingConfig.CreateMapper();
+        builder.Services.AddSingleton(mapper);
 
         // Documentacao Swagger
         builder.Services.AddSwaggerGen(c =>

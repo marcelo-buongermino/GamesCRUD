@@ -41,19 +41,21 @@ public class GameRepository : IGameRepository
     {
         var gameFound = await FindGameById(id);
 
-        if (gameFound == null)
+        if (gameFound != null)
         {
-            throw new Exception("Game não encontrado");
+            //gameFound.Id = game.Id;
+            gameFound.Name = game.Name;
+            gameFound.Description = game.Description;
+            gameFound.Category = game.Category;
+            gameFound.Price = game.Price;
+            gameFound.Platform = game.Platform;
+            gameFound.ReleaseDate = game.ReleaseDate;
+
+            _dbContext.Games.Update(gameFound);
+            await _dbContext.SaveChangesAsync();
+            return gameFound;
         }
-
-        gameFound.Id = game.Id;
-        gameFound.Name = game.Name;
-        gameFound.Category = game.Category;
-        gameFound.ReleaseDate = game.ReleaseDate;
-
-        _dbContext.Games.Update(gameFound);
-        await _dbContext.SaveChangesAsync();
-        return gameFound;
+        throw new Exception("Game não encontrado");
 
     }
 

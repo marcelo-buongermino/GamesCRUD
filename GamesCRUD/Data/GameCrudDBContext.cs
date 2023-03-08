@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using GamesCRUD.Mappings;
+﻿using GamesCRUD.Data.DatabaseMappings;
 using GamesCRUD.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace GamesCRUD.Data;
 
