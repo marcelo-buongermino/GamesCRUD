@@ -7,13 +7,20 @@ using GamesCRUD.Data.DTO;
 
 namespace GamesCRUD.Controllers;
 
+[Produces("application/json")]
 [Route("api/[controller]")]
 [ApiController]
 public class GameController : ControllerBase
 {
     // define injeções de dependencia(repositorios) e mapper
     private readonly IGameRepository _gameRepository;
-    private readonly IMapper _mapper;
+    private readonly IMapper? _mapper;
+
+    // construtor para teste unitario
+    public GameController(IGameRepository repository)
+    {
+        _gameRepository = repository;
+    }
 
     public GameController(IGameRepository gameRepository, IMapper mapper)
     {
@@ -34,7 +41,7 @@ public class GameController : ControllerBase
     {
         try
         {
-            var games = await _gameRepository.ListAllGames();
+            var games = await _gameRepository.ListAllGamesAsync();
             var gamesDTO = _mapper.Map<List<GameDTO>>(games);
             return Ok(gamesDTO);
         }
@@ -57,7 +64,7 @@ public class GameController : ControllerBase
     {
         try
         {
-            var game = await _gameRepository.FindGameById(id);
+            var game = await _gameRepository.FindGameByIdAsync(id);
             var gameDTO = _mapper.Map<GameDTO>(game);
             return Ok(gameDTO);
         }
@@ -80,7 +87,7 @@ public class GameController : ControllerBase
         try
         {
             var game = _mapper.Map<Game>(gamedto);
-            var createdObject = await _gameRepository.AddGame(game);
+            var createdObject = await _gameRepository.AddGameAsync(game);
             var gameDTO = _mapper.Map<GameDTO>(createdObject);
             return CreatedAtAction(nameof(GetGameById),
                                     new { id = game.Id },
@@ -109,7 +116,7 @@ public class GameController : ControllerBase
         {
             var game = _mapper.Map<Game>(gamedto);
             game.Id= id;
-            await _gameRepository.UpdateGame(game, id);
+            await _gameRepository.UpdateGameAsync(game, id);
             return NoContent();
         }
         catch (Exception ex)
@@ -145,11 +152,11 @@ public class GameController : ControllerBase
     )]
     [SwaggerResponse(204, "Requisição bem sucedida")]
     [SwaggerResponse(404, "Erro na requisição, game não encontrado!")]
-    public async Task<ActionResult> DeleteGame(int id)
+    public async Task<ActionResult> DeleteGameAsync(int id)
     {        
         try
         {
-            await _gameRepository.DeleteGame(id);
+            await _gameRepository.DeleteGameAsync(id);
             return NoContent();
         }
         catch (Exception)

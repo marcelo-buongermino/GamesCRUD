@@ -5,12 +5,12 @@ namespace GamesCRUD.Repositories.Interfaces
 {
     public interface IGameRepository
     {
-        Task<List<Game>> ListAllGames();
-        Task<Game> FindGameById(int id);
-        Task<Game> AddGame(Game game);
-        Task<Game> UpdateGame(Game game, int id);
+        Task<List<Game>> ListAllGamesAsync();
+        Task<Game> FindGameByIdAsync(int id);
+        Task<Game> AddGameAsync(Game game);
+        Task<Game> UpdateGameAsync(Game game, int id);
         //Task<GameModel> PartiallyUpdateGame(GameModel game, int id);
-        Task<bool> DeleteGame(int id);
+        Task<bool> DeleteGameAsync(int id);
 
     }
 }

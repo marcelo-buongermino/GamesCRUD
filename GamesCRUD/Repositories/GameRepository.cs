@@ -14,7 +14,7 @@ public class GameRepository : IGameRepository
         _dbContext = gameCrudDBContext;
     }
 
-    public async Task<Game> FindGameById(int id)
+    public async Task<Game> FindGameByIdAsync(int id)
     {
         var game = await _dbContext.Games.FirstOrDefaultAsync(game => game.Id == id);
         if (game == null) 
@@ -24,12 +24,12 @@ public class GameRepository : IGameRepository
         return game;
     }
 
-    public async Task<List<Game>> ListAllGames()
+    public async Task<List<Game>> ListAllGamesAsync()
     {
         return await _dbContext.Games.ToListAsync();
     }
 
-    public async Task<Game> AddGame(Game game)
+    public async Task<Game> AddGameAsync(Game game)
     {
         await _dbContext.Games.AddAsync(game);
         await _dbContext.SaveChangesAsync();
@@ -37,9 +37,9 @@ public class GameRepository : IGameRepository
         return game;
     }
 
-    public async Task<Game> UpdateGame(Game game, int id)
+    public async Task<Game> UpdateGameAsync(Game game, int id)
     {
-        var gameFound = await FindGameById(id);
+        var gameFound = await FindGameByIdAsync(id);
 
         if (gameFound != null)
         {
@@ -78,9 +78,9 @@ public class GameRepository : IGameRepository
     //    return gameFound;
     //}
 
-    public async Task<bool> DeleteGame(int id)
+    public async Task<bool> DeleteGameAsync(int id)
     {
-        Game gameFound = await FindGameById(id);
+        Game gameFound = await FindGameByIdAsync(id);
 
         if (gameFound == null)
         {
