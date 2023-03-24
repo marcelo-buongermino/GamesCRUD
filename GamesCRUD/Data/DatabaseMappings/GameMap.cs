@@ -10,16 +10,7 @@ public class GameMap : IEntityTypeConfiguration<Game>
     {
         entity.ToTable("games");
 
-        entity.Property(e => e.Id).HasColumnName("id");
-
-        entity.Property(e => e.Category)
-            .HasMaxLength(30)
-            .HasColumnName("category");
-
-        entity.Property(e => e.CreatedAt)
-            .ValueGeneratedOnAdd()
-            .HasColumnType("timestamp without time zone")
-            .HasColumnName("created_at");
+        entity.Property(e => e.Id).HasColumnName("id").IsRequired();
 
         entity.Property(e => e.Description)
             .HasMaxLength(300)
@@ -39,9 +30,19 @@ public class GameMap : IEntityTypeConfiguration<Game>
 
         entity.Property(e => e.ReleaseDate).HasColumnName("release_date");
 
+        entity.Property(e => e.CreatedAt)
+            .ValueGeneratedOnAdd()
+            .HasColumnType("timestamp without time zone")
+            .HasColumnName("created_at");
+
         entity.Property(e => e.UpdatedAt)
+            .ValueGeneratedOnUpdate()
             .HasColumnType("timestamp without time zone")
             .HasColumnName("updated_at");
+
+        entity.Property(e => e.CategoryId).HasColumnName("category_id");
+        entity.HasOne(e => e.Category).WithMany(e => e.Games).HasForeignKey(e => e.CategoryId);
+
 
     }
 }

@@ -11,6 +11,5 @@ namespace GamesCRUD.Repositories.Interfaces
         Task<Game> UpdateGameAsync(Game game, int id);
         //Task<GameModel> PartiallyUpdateGame(GameModel game, int id);
         Task<bool> DeleteGameAsync(int id);
-
     }
 }

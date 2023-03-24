@@ -17,12 +17,15 @@ public class Program
 
         // Conexao do EF, Db Context no pgsql 
         builder.Services.AddEntityFrameworkNpgsql()
-            .AddDbContext<GameCrudDBContext>(opt => 
-            opt.UseNpgsql(builder.Configuration.GetConnectionString("Game_Crud_DB")));
+            .AddDbContext<GameCrudDBContext>(opt =>
+            opt.UseNpgsql(builder.Configuration.GetConnectionString("Game_Crud_DB")
+            //opt.UseInternalServiceProvider()
+            )); ;
 
         // Add services to the container.
 
         builder.Services.AddScoped<IGameRepository, GameRepository>();
+        builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

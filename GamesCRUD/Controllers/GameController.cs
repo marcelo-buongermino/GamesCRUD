@@ -16,12 +16,6 @@ public class GameController : ControllerBase
     private readonly IGameRepository _gameRepository;
     private readonly IMapper? _mapper;
 
-    // construtor para teste unitario
-    public GameController(IGameRepository repository)
-    {
-        _gameRepository = repository;
-    }
-
     public GameController(IGameRepository gameRepository, IMapper mapper)
     {
         _gameRepository = gameRepository;

@@ -14,7 +14,10 @@ public partial class Game
     public string? Description { get; set; }
 
     [SwaggerSchema(Description = "Categoria do game")]
-    public string? Category { get; set; }
+    public Category? Category { get; set; }
+
+    [SwaggerSchema(Description = "ID da categoria do game")]
+    public int CategoryId { get; set; }
 
     [SwaggerSchema(Description = "Preço do game")]
     public decimal Price { get; set; }
