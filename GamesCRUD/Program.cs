@@ -19,7 +19,6 @@ public class Program
         builder.Services.AddEntityFrameworkNpgsql()
             .AddDbContext<GameCrudDBContext>(opt =>
             opt.UseNpgsql(builder.Configuration.GetConnectionString("Game_Crud_DB")
-            //opt.UseInternalServiceProvider()
             )); ;
 
         // Add services to the container.
@@ -32,6 +31,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddControllers().AddNewtonsoftJson();
+        //builder.Services.AddControllers().AddNewtonsoftJson(opts =>
+        //{
+        //    //opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        //});
 
         //comfiguração do serviço do AutoMapper
         var mappingConfig = new MapperConfiguration(mc =>

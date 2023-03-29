@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GamesCRUD.Models;
 
