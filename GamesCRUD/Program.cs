@@ -32,6 +32,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddControllers().AddNewtonsoftJson();
+        builder.Services.AddControllers().AddNewtonsoftJson(opts =>
+        {
+            opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
 
         //comfiguração do serviço do AutoMapper
         var mappingConfig = new MapperConfiguration(mc =>
