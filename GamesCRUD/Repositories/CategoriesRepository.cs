@@ -27,6 +27,12 @@ public class CategoriesRepository : ICategoriesRepository
         return categories;
     }
 
+    public async Task<List<Category>> ListAllCategoriesWithGamesAsync()
+    {
+        List<Category> categories = await _context.Categories.Include(cat => cat.Games).ToListAsync();
+        return categories;
+    }
+
     public async Task<Category> FindCategoryByIdAsync(int id)
     {
         Category? category = await _context.Categories.FirstOrDefaultAsync(cat => cat.Id == id);

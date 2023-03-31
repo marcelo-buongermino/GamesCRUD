@@ -19,7 +19,6 @@ public class Program
         builder.Services.AddEntityFrameworkNpgsql()
             .AddDbContext<GameCrudDBContext>(opt =>
             opt.UseNpgsql(builder.Configuration.GetConnectionString("Game_Crud_DB")
-            //opt.UseInternalServiceProvider()
             )); ;
 
         // Add services to the container.

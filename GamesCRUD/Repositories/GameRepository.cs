@@ -26,7 +26,7 @@ public class GameRepository : IGameRepository
 
     public async Task<List<Game>> ListAllGamesAsync()
     {
-        return await _dbContext.Games.ToListAsync();
+        return await _dbContext.Games.AsNoTracking().Include(cat => cat.Category).ToListAsync();
     }
 
     public async Task<Game> AddGameAsync(Game game)

@@ -1,7 +1,7 @@
-﻿using GamesCRUD.Models;
-using GamesCRUD.Repositories;
+﻿using AutoMapper;
+using GamesCRUD.Data.DTO;
+using GamesCRUD.Models;
 using GamesCRUD.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamesCRUD.Controllers
@@ -11,23 +11,41 @@ namespace GamesCRUD.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoriesRepository _categoriesRepository;
-        public CategoriesController(ICategoriesRepository categoriesRepository)
+        private readonly IMapper? _mapper;
+        public CategoriesController(ICategoriesRepository categoriesRepository, IMapper? mapper)
         {
             _categoriesRepository = categoriesRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Category>>>List()
+        public async Task<ActionResult<List<Category>>> List()
         {
             try
             {
                 var categories = await _categoriesRepository.ListAllCategoriesAsync();
-                return Ok(categories);
+                var categoriesDto = _mapper.Map<List<CategoryDTO>>(categories);
+                return Ok(categoriesDto);
             }
             catch (Exception ex)
             {
-                 return BadRequest(ex.Message);
-            }            
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("games")]
+        public async Task<ActionResult<List<Category>>> ListCategoriesWithGames()
+        {
+            try
+            {
+                var catWithGames = await _categoriesRepository.ListAllCategoriesWithGamesAsync();
+                var catWithGamesDto = _mapper.Map<List<CategoryDTO>>(catWithGames);
+                return Ok(catWithGamesDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao recuperar os dados. Tipo de excecao: {ex.Message}");
+            }
         }
           
 

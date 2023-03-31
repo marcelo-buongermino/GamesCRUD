@@ -1,5 +1,7 @@
 ﻿#nullable disable
 
+using Newtonsoft.Json;
+
 namespace GamesCRUD.Models
 {
     public partial class Category
@@ -7,6 +9,7 @@ namespace GamesCRUD.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public List<Game> Games { get; set; }
+        //[JsonIgnore]
+        public ICollection<Game> Games { get; set; }
     }
 }
